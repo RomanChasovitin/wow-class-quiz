@@ -1,6 +1,6 @@
 # WoW Class Quiz — agent contract
 
-A Russian-language quiz that helps a player pick a role, class and race for WoW Forever from indirect questions. Stage: concept; the race × class × faction table for Forever comes first.
+A Russian-language quiz that helps a player pick a role, class and race for WoW Forever from indirect questions. Stage: v1 built (Easy and Normal levels). Data: `docs/forever-race-class.md`; design: `specs/2026-11-01-quiz-design.md`.
 
 Roman's personal working agreement (`~/.agents/AGENTS.md`) applies on top of this file. This file holds
 only what is specific to this project.
@@ -10,9 +10,9 @@ only what is specific to this project.
 | Purpose | Command |
 |---------|---------|
 | Install | none yet |
-| Run | none yet |
+| Run | open `index.html` in a browser (no server needed); live: https://romanchasovitin.github.io/wow-class-quiz/ |
 | Check (types, lint) | none yet |
-| Test | none yet |
+| Test | in the browser console: `QuizEngine.selfCheck(10000)` (class and race balance, race rules) |
 | Build | none yet |
 
 ## Rules

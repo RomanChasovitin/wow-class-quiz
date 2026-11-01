@@ -1,0 +1,1275 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кем ты будешь в WoW Forever?</title>
+<meta name="description" content="Квиз о тебе, а не об игре: узнай свою роль, класс и расу в WoW Forever.">
+<meta name="theme-color" content="#131936">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Alegreya+Sans:wght@400;500;700&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root {
+  /* palette: a dusk sky over the world, starlight as the only warm light */
+  --night: #131936;
+  --dusk: #2A2960;
+  --horizon: #5E4A86;
+  --ink: #EEEAF6;
+  --muted: #B6B4D6;
+  --star: #F3DDA0;
+  --star-dim: rgba(243, 221, 160, .35);
+  --alliance: #6E9BF2;
+  --horde: #EC6A5F;
+  --glass: rgba(19, 25, 54, .72);
+  --glass-hi: rgba(42, 41, 96, .55);
+  --line: rgba(206, 210, 255, .16);
+  --line-hi: rgba(206, 210, 255, .34);
+
+  --display: "Forum", "Cormorant", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --text: "Alegreya Sans", "Segoe UI", "Trebuchet MS", system-ui, sans-serif;
+
+  --r-panel: 22px;
+  --r-btn: 14px;
+  --r-pill: 999px;
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 40px; --s7: 64px;
+  --col: 36rem;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--ink);
+  font: 400 1.0625rem/1.5 var(--text);
+  background: var(--night) linear-gradient(180deg, var(--night) 0%, var(--dusk) 58%, var(--horizon) 100%) fixed;
+  overflow-x: hidden;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--star); outline-offset: 3px; }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- sky ---------- */
+.sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.sky svg { position: absolute; width: 100%; }
+.stars { top: 0; height: 70%; transition: opacity .8s var(--ease); }
+.land, .isle { transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.sky .land { bottom: 0; height: clamp(120px, 16vw, 210px); }
+.sky .isle { bottom: clamp(70px, 9vw, 120px); right: 4%; width: clamp(200px, 30vw, 380px); }
+body[data-screen="question"] :is(.land, .isle) { opacity: .35; transform: translateY(18px); }
+body[data-screen="result"] :is(.land, .isle) { opacity: .22; transform: translateY(30px); }
+.twinkle { animation: twinkle 4.5s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .25; } }
+
+/* ---------- layout ---------- */
+main {
+  position: relative; z-index: 1;
+  width: 100%; max-width: var(--col);
+  margin: 0 auto;
+  padding: max(var(--s6), env(safe-area-inset-top)) var(--s4) var(--s7);
+}
+.screen { animation: enter .45s var(--ease) both; }
+@keyframes enter { from { opacity: 0; transform: translateY(10px); } }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.12; letter-spacing: .005em; }
+h1:focus, h2:focus { outline: none; }
+p { margin: 0; }
+
+/* ---------- start ---------- */
+.start { min-height: calc(100dvh - 120px); display: flex; flex-direction: column; padding-bottom: 96px; }
+.hero { text-align: center; padding: var(--s6) 0 var(--s6); }
+.title {
+  font-size: clamp(2.3rem, 10.4vw, 4rem);
+  line-height: 1.02;
+  text-wrap: balance;
+  text-shadow: 0 0 28px rgba(243, 221, 160, .22);
+}
+.title span { display: inline-block; }
+.lede { margin: var(--s4) auto 0; max-width: 26ch; color: var(--muted); font-size: 1.125rem; text-wrap: pretty; }
+.levels-h { font-size: 1.5rem; margin-bottom: var(--s3); }
+.levels { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.level {
+  width: 100%; text-align: left; cursor: pointer;
+  display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 0 var(--s3);
+  padding: var(--s4) var(--s4) var(--s4) var(--s5);
+  background: var(--glass); border: 1px solid var(--line); border-radius: var(--r-btn);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: border-color .2s, background-color .2s, transform .15s;
+}
+.level:hover:not(:disabled) { border-color: var(--star-dim); background: var(--glass-hi); }
+.level:active:not(:disabled) { transform: scale(.985); }
+.level-name { font-family: var(--display); font-size: 1.5rem; line-height: 1.2; }
+.level-count { color: var(--star); font-weight: 500; white-space: nowrap; }
+.level-note { grid-column: 1 / -1; color: var(--muted); font-size: .9375rem; margin-top: 2px; }
+.level:disabled { cursor: default; opacity: .6; background: rgba(19, 25, 54, .55); border-style: dashed; }
+.level:disabled .level-count { color: var(--muted); }
+.soon { font-size: .875rem; padding: 1px 8px; border: 1px solid var(--line-hi); border-radius: var(--r-pill); margin-left: var(--s2); color: var(--muted); }
+.fine { margin-top: auto; padding-top: var(--s6); text-align: center; color: var(--muted); font-size: .875rem; opacity: .8; }
+
+/* ---------- question ---------- */
+.qbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 44px; }
+.back {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+  padding: 0 var(--s3) 0 var(--s2); margin-left: calc(-1 * var(--s2));
+  background: none; border: 0; border-radius: var(--r-btn); color: var(--muted); cursor: pointer;
+}
+.back:hover { color: var(--ink); }
+.back svg { width: 18px; height: 18px; }
+.count { color: var(--muted); font-size: .9375rem; font-variant-numeric: tabular-nums; }
+.trail { display: flex; align-items: center; gap: 2px; height: 22px; margin: var(--s2) 0 var(--s6); }
+.trail i { flex: 1; height: 100%; position: relative; }
+.trail i::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px;
+  border-radius: 50%; background: var(--line-hi); transition: background-color .3s, box-shadow .3s, transform .3s;
+}
+.trail i.done::before { background: var(--star); box-shadow: 0 0 6px 1px rgba(243, 221, 160, .55); }
+.trail i.now::before { background: var(--ink); transform: scale(1.9); box-shadow: 0 0 0 3px rgba(238, 234, 246, .14); }
+.trail i + i::after {
+  content: ""; position: absolute; right: 50%; top: 50%; width: 100%; height: 1px; margin-right: 4px;
+  background: transparent; transition: background-color .3s;
+}
+.trail i.done + i::after { background: var(--star-dim); }
+.qtext { font-size: clamp(1.75rem, 7.4vw, 2.35rem); line-height: 1.15; text-wrap: balance; min-height: 2.3em; }
+.answers { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: var(--s2); }
+.answer {
+  width: 100%; min-height: 56px; text-align: left; cursor: pointer;
+  display: flex; align-items: center; gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  font-size: 1.125rem; line-height: 1.3;
+  background: var(--glass); border: 1px solid var(--line); border-radius: var(--r-btn);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: border-color .18s, background-color .18s, transform .12s;
+}
+.answer:hover { border-color: var(--star-dim); background: var(--glass-hi); }
+.answer:active { transform: scale(.985); }
+.answer .gem { flex: none; width: 14px; height: 14px; color: var(--muted); transition: color .18s, transform .25s var(--ease); }
+.answer .gem path { fill: transparent; stroke: currentColor; stroke-width: 1.5; transition: fill .18s; }
+.answer[aria-pressed="true"] { border-color: var(--star); background: rgba(243, 221, 160, .1); }
+.answer[aria-pressed="true"] .gem { color: var(--star); transform: rotate(45deg) scale(1.15); }
+.answer[aria-pressed="true"] .gem path { fill: currentColor; }
+.qcard.leaving { opacity: 0; transform: translateX(-14px); transition: opacity .16s ease-in, transform .16s ease-in; }
+.qcard.entering { animation: qin .3s var(--ease) both; }
+.qcard.entering.rev { animation-name: qinrev; }
+@keyframes qin { from { opacity: 0; transform: translateX(16px); } }
+@keyframes qinrev { from { opacity: 0; transform: translateX(-16px); } }
+
+/* ---------- result ---------- */
+.verdict { text-align: center; padding: var(--s4) 0 var(--s5); }
+.sigil { width: 92px; height: 92px; margin: 0 auto var(--s3); color: var(--star); filter: drop-shadow(0 0 14px rgba(243, 221, 160, .4)); }
+.sigil * { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.sigil .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.4s .15s var(--ease) forwards; }
+.sigil .ring { stroke: var(--star-dim); stroke-width: 1; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.verdict-pre { display: block; font-family: var(--text); font-size: 1.0625rem; color: var(--muted); margin-bottom: var(--s1); }
+.verdict-role { display: block; font-size: clamp(2.8rem, 13vw, 4.25rem); line-height: 1; color: var(--star); text-wrap: balance; text-shadow: 0 0 30px rgba(243, 221, 160, .25); }
+.verdict-blurb { max-width: 30ch; margin: var(--s4) auto 0; font-size: 1.1875rem; text-wrap: pretty; }
+
+.panel {
+  margin-top: var(--s4);
+  padding: var(--s5) var(--s4);
+  background: var(--glass); border: 1px solid var(--line); border-radius: var(--r-panel);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.panel > h2 { font-size: 1.75rem; }
+.panel-sub { color: var(--muted); font-size: .9375rem; margin-top: 2px; }
+
+.meters { list-style: none; margin: var(--s4) 0 0; padding: 0; display: grid; gap: var(--s3); }
+.meter { display: grid; grid-template-columns: 1fr auto; gap: 6px var(--s3); align-items: baseline; }
+.meter-name { font-weight: 500; }
+.meter-pct { font-variant-numeric: tabular-nums; color: var(--muted); }
+.meter-bar { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: rgba(206, 210, 255, .1); overflow: hidden; }
+.meter-bar span { display: block; height: 100%; border-radius: inherit; background: var(--c, var(--muted)); transform-origin: left; animation: grow .9s .3s var(--ease) both; }
+@keyframes grow { from { transform: scaleX(0); } }
+.meter:first-child .meter-name, .meter:first-child .meter-pct { color: var(--star); }
+.meter:first-child .meter-bar span { background: var(--star); }
+
+.classes { list-style: none; margin: var(--s4) 0 0; padding: 0; display: grid; gap: var(--s2); }
+.cls {
+  --c: var(--muted);
+  width: 100%; text-align: left; cursor: pointer; position: relative;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 0 var(--s3); align-items: center;
+  padding: var(--s3) var(--s4) var(--s3) var(--s3);
+  background: transparent; border: 1px solid var(--line); border-radius: var(--r-btn);
+  transition: border-color .2s, background-color .2s;
+}
+.cls:hover { border-color: var(--line-hi); }
+.cls-mark { width: 36px; height: 36px; color: var(--c); }
+.cls-mark circle { fill: none; stroke: currentColor; stroke-width: 1.2; opacity: .5; }
+.cls-mark path { fill: currentColor; }
+.cls-name { display: block; font-family: var(--display); font-size: 1.5rem; line-height: 1.1; color: var(--c); }
+.cls-spec { display: block; color: var(--muted); font-size: .9375rem; }
+.cls-pct { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 1.0625rem; }
+.cls-blurb { grid-column: 2 / -1; margin-top: var(--s2); font-size: 1rem; }
+.cls[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--c) 70%, transparent);
+  background: color-mix(in srgb, var(--c) 9%, transparent);
+  box-shadow: inset 3px 0 0 var(--c);
+}
+.cls[aria-pressed="true"] .cls-pct { color: var(--ink); }
+.cls:not([aria-pressed="true"]) .cls-blurb { display: none; }
+
+.controls { display: grid; gap: var(--s4); margin-top: var(--s4); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; border: 1px solid var(--line); border-radius: var(--r-pill); background: rgba(10, 13, 32, .4); }
+.seg button {
+  min-height: 44px; border: 0; border-radius: var(--r-pill); background: transparent; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
+  font-weight: 500; color: var(--muted); transition: background-color .2s, color .2s;
+}
+.seg button svg { width: 16px; height: 16px; }
+.seg button[data-f="alliance"][aria-pressed="true"] { background: rgba(110, 155, 242, .22); color: #D6E2FF; box-shadow: inset 0 0 0 1px rgba(110, 155, 242, .7); }
+.seg button[data-f="horde"][aria-pressed="true"] { background: rgba(236, 106, 95, .2); color: #FFD9D4; box-shadow: inset 0 0 0 1px rgba(236, 106, 95, .7); }
+.switch {
+  width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 0 var(--s3); align-items: center; text-align: left;
+  padding: var(--s2) 0; background: none; border: 0; cursor: pointer; min-height: 44px; border-radius: var(--r-btn);
+}
+.switch-label { font-weight: 500; }
+.switch-note { grid-column: 1; color: var(--muted); font-size: .875rem; }
+.switch-track {
+  grid-row: 1 / span 2; grid-column: 2;
+  width: 48px; height: 28px; border-radius: var(--r-pill); position: relative;
+  background: rgba(206, 210, 255, .14); border: 1px solid var(--line-hi); transition: background-color .2s, border-color .2s;
+}
+.switch-track::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--muted); transition: transform .2s var(--ease), background-color .2s;
+}
+.switch[aria-checked="true"] .switch-track { background: rgba(243, 221, 160, .25); border-color: var(--star); }
+.switch[aria-checked="true"] .switch-track::after { transform: translateX(20px); background: var(--star); }
+
+.races { list-style: none; margin: var(--s4) 0 0; padding: 0; display: grid; gap: var(--s3); }
+.races.swap { animation: enter .35s var(--ease) both; }
+.race { --fc: var(--alliance); padding: var(--s3) 0 var(--s3) var(--s4); border-left: 2px solid color-mix(in srgb, var(--fc) 40%, transparent); }
+.race:first-child { border-left-color: var(--fc); }
+.race-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); }
+.race-name { font-family: var(--display); font-size: 1.375rem; line-height: 1.15; overflow-wrap: anywhere; hyphens: auto; }
+.race:first-child .race-name { font-size: 1.625rem; }
+.race-pct { font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.race-blurb { color: var(--muted); font-size: 1rem; margin-top: 2px; }
+.race-only { margin-top: var(--s3); font-size: .9375rem; color: var(--muted); }
+.race-none { margin-top: var(--s4); }
+.race-none p { color: var(--muted); }
+.ghost {
+  min-height: 44px; padding: 0 var(--s4); margin-top: var(--s3); cursor: pointer;
+  border: 1px solid var(--line-hi); border-radius: var(--r-pill); background: transparent; font-weight: 500;
+}
+.ghost:hover { border-color: var(--star); }
+
+.why { display: grid; gap: var(--s4); margin-top: var(--s4); }
+.why h3 { font-family: var(--text); font-weight: 500; font-size: .9375rem; color: var(--muted); }
+.why p { margin-top: 2px; font-size: 1.125rem; line-height: 1.45; text-wrap: pretty; }
+
+.actions { margin-top: var(--s5); display: grid; gap: var(--s2); }
+.primary {
+  min-height: 52px; border: 0; border-radius: var(--r-btn); cursor: pointer;
+  background: var(--star); color: #1B1A3A; font-weight: 700; font-size: 1.0625rem;
+  box-shadow: 0 0 24px rgba(243, 221, 160, .25);
+  transition: transform .12s, box-shadow .2s;
+}
+.primary:hover { box-shadow: 0 0 32px rgba(243, 221, 160, .4); }
+.primary:active { transform: scale(.985); }
+.primary:focus-visible { outline-color: var(--ink); }
+.secondary {
+  min-height: 52px; border-radius: var(--r-btn); cursor: pointer; font-weight: 500;
+  background: transparent; border: 1px solid var(--line-hi);
+}
+.secondary:hover { border-color: var(--star-dim); }
+.status { min-height: 1.5em; text-align: center; color: var(--star); font-size: .9375rem; }
+.manual { display: grid; gap: var(--s1); }
+.manual label { color: var(--muted); font-size: .9375rem; }
+.manual input {
+  width: 100%; min-height: 44px; padding: 0 var(--s3); font: inherit; font-size: .9375rem; color: var(--ink);
+  background: rgba(10, 13, 32, .6); border: 1px solid var(--line-hi); border-radius: var(--r-btn);
+}
+
+@media (min-width: 720px) {
+  main { padding-top: var(--s7); }
+  .panel { padding: var(--s5) var(--s5); }
+  .hero { padding-top: var(--s7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .sigil .draw { stroke-dashoffset: 0; }
+}
+</style>
+</head>
+<body data-screen="start">
+
+<div class="sky" aria-hidden="true">
+  <svg class="stars" id="stars" preserveAspectRatio="xMidYMin slice" viewBox="0 0 400 300"></svg>
+  <svg class="isle" viewBox="0 0 200 110">
+    <g fill="none" stroke="#CFD4FF" stroke-opacity=".28" stroke-width=".8" stroke-linecap="round">
+      <path d="M4 40 q24 -6 48 0 t40 0"/>
+      <path d="M110 66 q20 -5 40 0 t36 -2 q8 -2 6 -7"/>
+    </g>
+    <g fill="#1B1F45">
+      <path d="M58 70 h56 l-6 6 l-8 3 l-6 9 l-5 -5 l-5 12 l-6 -12 l-6 6 l-4 -9 l-6 -3 z"/>
+      <path d="M78 70 v-16 l3 -2 v-10 l2 -6 l2 6 v10 l3 2 v16 z"/>
+      <path d="M94 70 v-8 l3 -3 l3 3 v8 z"/>
+      <path d="M128 88 h14 l-3 3 l-4 6 l-4 -6 z"/>
+    </g>
+    <path d="M83 26 v4" stroke="#F3DDA0" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="83" cy="46" r="1" fill="#F3DDA0"/>
+  </svg>
+  <svg class="land" viewBox="0 0 400 80" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F3DDA0" stop-opacity="0"/>
+        <stop offset="1" stop-color="#F3DDA0" stop-opacity=".16"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="400" height="80" fill="url(#glow)"/>
+    <path fill="#232456" d="M0 38 L22 26 L40 32 L64 14 L82 24 L104 8 L126 22 L148 16 L170 28 L196 10 L220 24 L244 18 L268 30 L292 14 L318 26 L344 6 L366 20 L400 12 V80 H0 Z"/>
+    <path fill="#151938" d="M0 56 L30 44 L52 50 L78 34 L96 44 L118 38 L142 50 L170 40 L196 52 L226 36 L250 46 L276 42 L304 54 L330 40 L356 48 L380 38 L400 44 V80 H0 Z"/>
+  </svg>
+</div>
+
+<main id="app">
+  <!-- START -->
+  <section class="screen start" id="s-start">
+    <div class="hero">
+      <h1 class="title" tabindex="-1"><span>Кем&nbsp;ты&nbsp;будешь</span> <span>в&nbsp;WoW&nbsp;Forever?</span></h1>
+      <p class="lede">Вопросы о&nbsp;тебе, а&nbsp;не&nbsp;об&nbsp;игре. В&nbsp;конце узнаешь свою роль, класс и&nbsp;расу.</p>
+    </div>
+    <h2 class="levels-h">Сколько вопросов?</h2>
+    <ul class="levels" id="levels"></ul>
+    <p class="fine">Фанатский квиз. Не связан с&nbsp;Blizzard Entertainment.</p>
+  </section>
+
+  <!-- QUESTION -->
+  <section class="screen" id="s-question" hidden>
+    <div class="qbar">
+      <button class="back" id="back" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Назад
+      </button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+    <div class="trail" id="trail" aria-hidden="true"></div>
+    <div class="qcard" id="qcard">
+      <h2 class="qtext" id="qtext" tabindex="-1"></h2>
+      <ul class="answers" id="answers"></ul>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result" hidden>
+    <div class="verdict">
+      <div class="sigil" id="sigil" aria-hidden="true"></div>
+      <h1 tabindex="-1" id="verdict-h"><span class="verdict-pre">Тебе подходит роль</span><span class="verdict-role" id="role-name"></span></h1>
+      <p class="verdict-blurb" id="role-blurb"></p>
+    </div>
+
+    <section class="panel" aria-labelledby="roles-h">
+      <h2 id="roles-h">Роли</h2>
+      <ul class="meters" id="roles"></ul>
+    </section>
+
+    <section class="panel" aria-labelledby="class-h">
+      <h2 id="class-h">Класс</h2>
+      <p class="panel-sub">Нажми на класс, чтобы подобрать к нему расу.</p>
+      <ul class="classes" id="classes"></ul>
+    </section>
+
+    <section class="panel" aria-labelledby="race-h">
+      <h2 id="race-h">Раса</h2>
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Фракция">
+          <button type="button" data-f="alliance" aria-pressed="true">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 13.5 4v4.2c0 3-2.4 5.3-5.5 6.3-3.1-1-5.5-3.3-5.5-6.3V4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Альянс
+          </button>
+          <button type="button" data-f="horde" aria-pressed="false">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5 8 2l6 1.5-1.2 6.5L8 14.5 3.2 10z M8 2v12.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Орда
+          </button>
+        </div>
+        <button type="button" class="switch" id="sky" role="switch" aria-checked="true">
+          <span class="switch-label">Учитывать Небеснорожденных</span>
+          <span class="switch-note">раса требует платного издания</span>
+          <span class="switch-track" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div id="races-wrap" aria-live="polite"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="why-h" id="why-panel">
+      <h2 id="why-h">Почему так</h2>
+      <div class="why" id="why"></div>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="primary" id="share">Поделиться результатом</button>
+      <p class="status" id="status" role="status"></p>
+      <div class="manual" id="manual" hidden>
+        <label for="manual-link">Скопируй ссылку вручную:</label>
+        <input id="manual-link" type="text" readonly>
+      </div>
+      <button type="button" class="secondary" id="again">Пройти ещё раз</button>
+    </div>
+  </section>
+</main>
+
+<script id="engine">
+(function () {
+  'use strict';
+
+  // Data: docs/forever-race-class.md (race x class x faction) and
+  // specs/2026-11-01-quiz-design.md (roles, axes, scoring).
+
+  var ROLE_AXES = ['tank', 'heal', 'melee', 'ranged'];
+  var STYLE_AXES = ['burst', 'cx', 'pet', 'st', 'ut', 'solo', 'mag', 'sh', 'nat'];
+  var RACE_AXES = ['wild', 'grim', 'bulk', 'whim', 'myst'];
+  var ALL_AXES = ROLE_AXES.concat(STYLE_AXES, RACE_AXES);
+
+  var ROLES = {
+    tank: { name: 'Танк', blurb: 'Стоишь впереди и принимаешь удары на себя, пока группа делает своё дело.' },
+    heal: { name: 'Лекарь', blurb: 'Держишь всех на ногах: без тебя группа не переживёт первую серьёзную драку.' },
+    melee: { name: 'Боец ближнего боя', blurb: 'Работаешь вплотную к врагу: быстро, жёстко, в самой гуще.' },
+    ranged: { name: 'Боец дальнего боя', blurb: 'Наносишь урон с расстояния и видишь бой целиком.' }
+  };
+
+  // cap: how well the class fills each role (1 full spec, 0.5 partial).
+  // Hybrids get slightly less than 1 so pure classes win their own role on a tie.
+  // style: playstyle profile, -1..1 per axis.
+  var CLASSES = [
+    { id: 'warrior', name: 'Воин', color: '#C79C6E',
+      blurb: 'Сталь, ярость и простая честная сила. Чем жарче бой, тем сильнее воин.',
+      cap: { tank: 1, melee: 1 },
+      style: { burst: 0.4, cx: 0, pet: -1, st: -1, ut: -0.3, solo: -0.2, mag: -1, sh: 0, nat: -0.5 } },
+    { id: 'paladin', name: 'Паладин', color: '#F58CBA',
+      blurb: 'Воин Света в тяжёлых доспехах: защищает, лечит и усиливает союзников.',
+      cap: { tank: 0.9, heal: 0.9, melee: 0.9 },
+      style: { burst: -0.3, cx: -0.3, pet: -1, st: -1, ut: 0.9, solo: 0, mag: 0.2, sh: -1, nat: -0.4 } },
+    { id: 'hunter', name: 'Охотник', color: '#ABD473',
+      blurb: 'Следопыт с верным зверем. Самостоятелен, бьёт издалека и редко остаётся один.',
+      cap: { ranged: 1, melee: 0.5 },
+      style: { burst: -0.1, cx: -0.1, pet: 1, st: -0.3, ut: 0.1, solo: 0.9, mag: -0.8, sh: 0, nat: 0.8 } },
+    { id: 'rogue', name: 'Разбойник', color: '#FFF569',
+      blurb: 'Тень, кинжал и точный расчёт. Появляется из ниоткуда и решает бой за секунды.',
+      cap: { melee: 1 },
+      style: { burst: 1, cx: 0.6, pet: -1, st: 1, ut: 0.2, solo: 0.7, mag: -1, sh: 0.4, nat: -0.3 } },
+    { id: 'priest', name: 'Жрец', color: '#FFFFFF',
+      blurb: 'Мастер исцеления и щитов, а в тёмной ипостаси — разрушительной магии Тьмы.',
+      cap: { heal: 1, ranged: 0.9 },
+      style: { burst: -0.4, cx: 0.3, pet: -1, st: -0.8, ut: 0.8, solo: -0.8, mag: 0.9, sh: 0.1, nat: -0.5 } },
+    { id: 'shaman', name: 'Шаман', color: '#0070DE',
+      blurb: 'Говорит со стихиями, ставит тотемы и может лечить, сражаться вблизи или издалека.',
+      cap: { tank: 0.45, heal: 0.9, melee: 0.9, ranged: 0.9 },
+      style: { burst: 0.2, cx: 0.5, pet: 0, st: -0.8, ut: 1, solo: -0.3, mag: 0.5, sh: -0.4, nat: 1 } },
+    { id: 'mage', name: 'Маг', color: '#69CCF0',
+      blurb: 'Огонь, лёд и тайная магия. Хрупкий, но способен стереть врагов одним залпом.',
+      cap: { ranged: 1 },
+      style: { burst: 0.9, cx: 0.4, pet: -0.8, st: -0.6, ut: 0.4, solo: 0.1, mag: 1, sh: -0.2, nat: -0.8 } },
+    { id: 'warlock', name: 'Чернокнижник', color: '#9482C9',
+      blurb: 'Заплатил за силу и не жалеет. Демоны служат ему, а проклятия медленно губят врага.',
+      cap: { ranged: 1 },
+      style: { burst: -0.6, cx: 0.7, pet: 1, st: -0.6, ut: 0.3, solo: 0.6, mag: 1, sh: 1, nat: -0.6 } },
+    { id: 'druid', name: 'Друид', color: '#FF7D0A',
+      blurb: 'Хранитель природы, который становится медведем, кошкой или целителем — когда нужно.',
+      cap: { tank: 0.85, heal: 0.85, melee: 0.85, ranged: 0.85 },
+      style: { burst: -0.2, cx: 0.9, pet: -0.6, st: 0.5, ut: 0.6, solo: 0.3, mag: 0.4, sh: -0.3, nat: 1 } }
+  ];
+
+  var RACES = [
+    { id: 'human', name: 'Человек', faction: 'alliance', skyborne: false,
+      classes: ['warrior', 'paladin', 'hunter', 'rogue', 'priest', 'mage', 'warlock'],
+      blurb: 'Каменные города, рыцарские ордена и упрямая вера в то, что всё можно исправить.',
+      p: { wild: -0.8, grim: -0.5, bulk: 0, whim: -0.2, myst: -0.2 } },
+    { id: 'dwarf', name: 'Дворф', faction: 'alliance', skyborne: false,
+      classes: ['warrior', 'paladin', 'hunter', 'rogue', 'priest', 'shaman'],
+      blurb: 'Крепкие, бородатые и шумные. Пиво, ружья и мастерские в глубине гор.',
+      p: { wild: -0.3, grim: -0.2, bulk: 0.4, whim: 0.5, myst: -0.7 } },
+    { id: 'nightelf', name: 'Ночной эльф', faction: 'alliance', skyborne: false,
+      classes: ['warrior', 'hunter', 'rogue', 'priest', 'druid'],
+      blurb: 'Древний народ лунных лесов. Тихие, гордые и помнящие тысячелетия.',
+      p: { wild: 0.8, grim: 0.1, bulk: -0.2, whim: -0.6, myst: 0.8 } },
+    { id: 'gnome', name: 'Гном', faction: 'alliance', skyborne: false,
+      classes: ['warrior', 'rogue', 'priest', 'mage', 'warlock'],
+      blurb: 'Маленькие гении-изобретатели. Шестерёнки, взрывы и неисчерпаемый оптимизм.',
+      p: { wild: -1, grim: -0.6, bulk: -1, whim: 1, myst: -0.9 } },
+    { id: 'skyborne_a', name: 'Небеснорожденный из Высшего ордена', faction: 'alliance', skyborne: true,
+      classes: ['warrior', 'hunter', 'rogue', 'mage', 'druid'],
+      blurb: 'Новый народ неба. Высший орден хранит тайную магию своих предков.',
+      p: { wild: -0.1, grim: -0.5, bulk: -0.5, whim: -0.3, myst: 1 } },
+    { id: 'orc', name: 'Орк', faction: 'horde', skyborne: false,
+      classes: ['warrior', 'hunter', 'rogue', 'shaman', 'mage', 'warlock'],
+      blurb: 'Могучий народ воинов и шаманов, который отвоевал свою свободу и честь.',
+      p: { wild: 0.4, grim: 0.2, bulk: 0.9, whim: -0.3, myst: -0.4 } },
+    { id: 'undead', name: 'Нежить', faction: 'horde', skyborne: false,
+      classes: ['warrior', 'paladin', 'rogue', 'priest', 'mage', 'warlock'],
+      blurb: 'Отрёкшиеся: вернулись из мёртвых со своей волей, чёрным юмором и счётами к миру.',
+      p: { wild: -0.4, grim: 1, bulk: -0.3, whim: 0.2, myst: 0.4 } },
+    { id: 'tauren', name: 'Таурен', faction: 'horde', skyborne: false,
+      classes: ['warrior', 'hunter', 'shaman', 'druid'],
+      blurb: 'Огромные и спокойные кочевники степей. Чтут Мать-Землю и мудрость предков.',
+      p: { wild: 1, grim: -0.4, bulk: 1, whim: -0.4, myst: 0.3 } },
+    { id: 'troll', name: 'Тролль', faction: 'horde', skyborne: false,
+      classes: ['warrior', 'hunter', 'rogue', 'priest', 'shaman', 'mage', 'warlock'],
+      blurb: 'Ловкие и хитрые жители джунглей. Вуду, духи предков и широкая улыбка с клыками.',
+      p: { wild: 0.7, grim: 0.3, bulk: 0.4, whim: 0.7, myst: 0.5 } },
+    { id: 'skyborne_h', name: 'Небеснорожденный из Ваятелей ветра', faction: 'horde', skyborne: true,
+      classes: ['warrior', 'hunter', 'rogue', 'shaman', 'druid'],
+      blurb: 'Новый народ неба. Ваятели ветра свободны, как буря, и слушают стихии.',
+      p: { wild: 0.6, grim: -0.6, bulk: -0.5, whim: 0.1, myst: 0.6 } }
+  ];
+
+  // Spec name for a class in a role; style = normalized player vector.
+  function specFor(classId, role, v) {
+    switch (classId) {
+      case 'warrior': return role === 'tank' ? 'Защита' : (v.burst > 0.2 ? 'Неистовство' : 'Оружие');
+      case 'paladin': return { tank: 'Защита', heal: 'Свет', melee: 'Воздаяние' }[role];
+      case 'hunter': return role === 'melee' ? 'Выживание' : (v.pet > 0.2 ? 'Повелитель зверей' : 'Стрельба');
+      case 'rogue': return v.st > 0.3 ? 'Скрытность' : (v.burst > 0.3 ? 'Ликвидация' : 'Бой');
+      case 'priest': return role === 'ranged' ? 'Тьма' : (v.ut > 0.3 ? 'Послушание' : 'Свет');
+      case 'shaman': return { tank: 'Совершенствование', heal: 'Исцеление', melee: 'Совершенствование', ranged: 'Стихии' }[role];
+      case 'mage':
+        if (v.ut >= v.burst && v.ut >= v.cx) return 'Лёд';
+        return v.burst >= v.cx ? 'Огонь' : 'Тайная магия';
+      case 'warlock': return v.pet > 0.3 ? 'Демонология' : (v.burst < -0.2 ? 'Колдовство' : 'Разрушение');
+      case 'druid': return { tank: 'Сила зверя — медведь', heal: 'Исцеление', melee: 'Сила зверя — кошка', ranged: 'Баланс' }[role];
+    }
+    return '';
+  }
+
+  // Question bank. Easy = first 10 (flag e), Normal = all 30.
+  // Each answer: [text, weights, reason].
+  function Q(id, e, text, answers) {
+    return { id: id, easy: e, text: text, answers: answers.map(function (a) { return { text: a[0], w: a[1], reason: a[2] }; }) };
+  }
+  var QUESTIONS = [
+    Q('q01', 1, 'Друзья зовут тебя в поход на выходные. Какая роль тебе ближе?', [
+      ['Иду первым, прокладываю тропу и первым встречаю неприятности', { tank: 1, melee: 0.3, bulk: 0.2 }, 'идёшь первым и встречаешь неприятности'],
+      ['Несу аптечку и слежу, чтобы никто не стёр ноги', { heal: 1, ut: 0.5 }, 'заботишься, чтобы все дошли целыми'],
+      ['Ухожу на разведку один и возвращаюсь с новостями', { melee: 0.5, st: 0.6, solo: 0.6 }, 'любишь разведку в одиночку'],
+      ['Держусь чуть позади с картой и вижу всю картину', { ranged: 1, ut: 0.3 }, 'держишь дистанцию и видишь картину целиком']
+    ]),
+    Q('q02', 1, 'Ты смотришь фильм про героев. Какая сцена цепляет сильнее всего?', [
+      ['Один удар — и бой окончен', { burst: 1, melee: 0.4 }, 'ценишь один решающий удар'],
+      ['Долгая осада, где побеждает терпение', { burst: -1, ranged: 0.3 }, 'веришь в терпение и медленное давление'],
+      ['Герой закрывает собой друзей от лавины врагов', { tank: 0.8, sh: -0.5 }, 'ценишь тех, кто закрывает собой других'],
+      ['Хитрый план, в котором каждый ход просчитан', { cx: 0.8, st: 0.3 }, 'любишь хитрые многоходовки']
+    ]),
+    Q('q03', 1, 'Какое животное ты бы завёл, если бы не было никаких ограничений?', [
+      ['Большую собаку или волка, который всегда рядом', { pet: 1, nat: 0.5, wild: 0.3 }, 'хочешь верного спутника рядом'],
+      ['Кошку: сама по себе, но иногда снисходит', { pet: 0.2, st: 0.5, solo: 0.4 }, 'ценишь независимость — свою и чужую'],
+      ['Никого: никто не отвлекает, мне и так хорошо', { pet: -1, solo: 0.2 }, 'не любишь делить внимание с питомцем'],
+      ['Что-то странное: ворона, змею или паука', { pet: 0.6, sh: 0.6, grim: 0.4 }, 'любишь странных и мрачных созданий']
+    ]),
+    Q('q04', 1, 'Вечер, новая настольная игра. Что выберешь?', [
+      ['Простую и быструю — главное, чтобы было весело', { cx: -1, whim: 0.4 }, 'любишь простые и понятные правила'],
+      ['Толстую коробку с правилами на сорок страниц', { cx: 1 }, 'не боишься сложных систем'],
+      ['Кооператив, где побеждают только вместе', { solo: -1, ut: 0.5, heal: 0.3 }, 'любишь побеждать вместе'],
+      ['Дуэль один на один', { solo: 0.8, burst: 0.4, melee: 0.3 }, 'любишь честную дуэль']
+    ]),
+    Q('q05', 1, 'На один день тебе дают особую силу. Что выберешь?', [
+      ['Огромную физическую силу', { mag: -1, bulk: 0.6, melee: 0.4 }, 'доверяешь грубой силе'],
+      ['Власть над огнём и льдом', { mag: 1, burst: 0.4, ranged: 0.4 }, 'мечтаешь о стихийной магии'],
+      ['Умение говорить с природой и зверями', { nat: 1, wild: 0.6, mag: 0.3, pet: 0.3 }, 'чувствуешь связь с природой'],
+      ['Умение исцелять прикосновением', { heal: 1, mag: 0.5, sh: -0.6 }, 'хочешь лечить, а не ранить']
+    ]),
+    Q('q06', 1, 'Где бы тебе хотелось жить в волшебном мире?', [
+      ['В большом каменном городе с рынками и соборами', { wild: -1, myst: -0.2, grim: -0.4 }, 'любишь шумные каменные города'],
+      ['В древнем лесу, где деревья помнят тысячу лет', { wild: 0.9, myst: 0.8, nat: 0.4 }, 'мечтаешь о древних лесах'],
+      ['В мастерской под горой, полной механизмов', { wild: -0.8, myst: -1, bulk: -0.2, whim: 0.5 }, 'любишь механизмы и мастерские'],
+      ['В степи у костра, под открытым небом', { wild: 1, bulk: 0.5, myst: 0.2, nat: 0.3 }, 'чувствуешь себя дома под открытым небом']
+    ]),
+    Q('q07', 1, 'Какой стиль тебе нравится в одежде и вещах?', [
+      ['Мрачный: чёрное, кожа, черепа', { grim: 1, sh: 0.6 }, 'любишь мрачную эстетику'],
+      ['Светлый и благородный: белое и золото', { grim: -1, sh: -0.8 }, 'любишь светлое и благородное'],
+      ['Удобный и практичный, ничего лишнего', { myst: -0.5, cx: -0.3, whim: -0.2 }, 'ценишь практичность'],
+      ['Яркий и необычный, чтобы все оборачивались', { whim: 0.8, myst: 0.4, burst: 0.2 }, 'любишь выделяться']
+    ]),
+    Q('q08', 1, 'В компании друзей ты обычно…', [
+      ['Шутишь и заводишь всех', { whim: 1, burst: 0.2 }, 'заводишь всю компанию'],
+      ['Слушаешь и замечаешь, кому плохо', { heal: 0.7, ut: 0.4, whim: -0.3 }, 'замечаешь, кому плохо'],
+      ['Решаешь, куда идём и что делаем', { tank: 0.7, ut: 0.4, whim: -0.4 }, 'берёшь решения на себя'],
+      ['Сидишь в углу и наблюдаешь', { st: 0.6, solo: 0.5, ranged: 0.3, grim: 0.3 }, 'любишь наблюдать со стороны']
+    ]),
+    Q('q09', 1, 'Задача не решается с первого раза. Что делаешь?', [
+      ['Давлю, пока не поддастся', { tank: 0.4, melee: 0.5, bulk: 0.5, cx: -0.4 }, 'давишь, пока не поддастся'],
+      ['Отступаю, изучаю и захожу с неожиданной стороны', { st: 0.7, cx: 0.5, burst: 0.4 }, 'заходишь с неожиданной стороны'],
+      ['Зову на помощь и делю задачу на всех', { solo: -0.8, ut: 0.4, heal: 0.2 }, 'не стесняешься объединиться'],
+      ['Пробую сто мелких способов, пока какой-то не сработает', { cx: 0.6, burst: -0.6, ranged: 0.4 }, 'упорно пробуешь разные способы']
+    ]),
+    Q('q10', 1, 'Как ты относишься к риску в играх?', [
+      ['Лучше перестраховаться: выжить важнее всего', { tank: 0.5, heal: 0.5, burst: -0.4 }, 'ставишь выживание на первое место'],
+      ['Всё или ничего: рискую ради большого куша', { burst: 1, melee: 0.4 }, 'рискуешь ради большого куша'],
+      ['Риск — это когда враг подошёл близко. Не люблю', { ranged: 1, mag: 0.2 }, 'держишь врага на расстоянии'],
+      ['Один против всего мира — вот это по мне', { solo: 1, sh: 0.3, pet: 0.2 }, 'не боишься остаться один против всех']
+    ]),
+    Q('q11', 0, 'В команде на работе или в учёбе ты чаще всего…', [
+      ['Принимаешь удар на себя, когда кто-то недоволен', { tank: 1 }, 'принимаешь удар на себя'],
+      ['Помогаешь другим, даже если это не твоя задача', { heal: 0.8, ut: 0.6 }, 'помогаешь, даже когда не просят'],
+      ['Быстро делаешь свою часть, и лучше всех', { melee: 0.4, ranged: 0.4, burst: 0.5, solo: 0.4 }, 'делаешь свою часть лучше всех'],
+      ['Налаживаешь процессы, чтобы всем было удобнее', { ut: 1, cx: 0.4 }, 'налаживаешь работу для всех']
+    ]),
+    Q('q12', 0, 'Выбери суперспособность.', [
+      ['Становиться невидимым', { st: 1 }, 'хочешь становиться невидимым'],
+      ['Не чувствовать боли', { tank: 0.8, bulk: 0.5 }, 'хочешь выдерживать любую боль'],
+      ['Призывать помощника, который выполняет приказы', { pet: 1, sh: 0.3 }, 'хочешь помощника, который слушается'],
+      ['Мгновенно перемещаться куда угодно', { ranged: 0.4, mag: 0.6, myst: 0.4 }, 'хочешь мгновенно перемещаться']
+    ]),
+    Q('q13', 0, 'Какая музыка помогает тебе сосредоточиться?', [
+      ['Тяжёлая и громкая', { bulk: 0.5, burst: 0.4, grim: 0.3, melee: 0.3 }, 'заряжаешься тяжёлой музыкой'],
+      ['Спокойная, природная: дождь, лес, флейта', { nat: 0.8, wild: 0.6, burst: -0.4 }, 'успокаиваешься звуками природы'],
+      ['Мрачный эмбиент или органные мотивы', { sh: 0.8, grim: 0.6, myst: 0.4 }, 'любишь мрачную атмосферу'],
+      ['Тишина. Музыка отвлекает', { cx: 0.4, solo: 0.4, whim: -0.4 }, 'ценишь тишину и сосредоточенность']
+    ]),
+    Q('q14', 0, 'Как ты играешь в командных шутерах или похожих играх?', [
+      ['Лезу в самую гущу', { melee: 0.8, tank: 0.4, burst: 0.3 }, 'лезешь в самую гущу'],
+      ['Снайпер: дальше всех и точнее всех', { ranged: 1, solo: 0.3 }, 'бьёшь точно и издалека'],
+      ['Медик или поддержка: без меня отряд ляжет', { heal: 1, ut: 0.4 }, 'держишь отряд на ногах'],
+      ['Ставлю турели и ловушки и смотрю, как они работают', { pet: 0.7, cx: 0.4, ranged: 0.4, ut: 0.3 }, 'любишь, когда за тебя работают ловушки и помощники']
+    ]),
+    Q('q15', 0, 'Что больше всего раздражает в общих делах?', [
+      ['Когда все разбегаются и никто не держит строй', { tank: 0.7, ut: 0.3 }, 'хочешь держать строй'],
+      ['Когда кто-то падает, а помочь некому', { heal: 0.9 }, 'не можешь смотреть, как кто-то падает'],
+      ['Когда приходится ждать других, а не просто сделать дело', { solo: 0.8, burst: 0.3 }, 'не любишь ждать других'],
+      ['Когда никто не думает наперёд', { cx: 0.6, ut: 0.4 }, 'думаешь наперёд']
+    ]),
+    Q('q16', 0, 'Выбери стихию.', [
+      ['Огонь', { mag: 0.6, burst: 0.6, ranged: 0.3 }, 'выбираешь огонь'],
+      ['Вода и лёд', { mag: 0.6, ut: 0.4, cx: 0.3 }, 'выбираешь воду и лёд'],
+      ['Земля', { tank: 0.4, nat: 0.5, bulk: 0.5 }, 'выбираешь твёрдую землю'],
+      ['Ветер', { nat: 0.6, myst: 0.4, bulk: -0.6, wild: 0.4 }, 'выбираешь свободный ветер']
+    ]),
+    Q('q17', 0, 'Какой герой книг или фильмов тебе ближе?', [
+      ['Благородный рыцарь, который стоит за правду', { sh: -1, tank: 0.4, grim: -0.4 }, 'уважаешь благородных рыцарей'],
+      ['Тёмный колдун, который дорого заплатил за силу', { sh: 1, mag: 0.8, grim: 0.5 }, 'понимаешь тёмных колдунов'],
+      ['Следопыт-одиночка с верным зверем', { pet: 0.8, nat: 0.6, solo: 0.6 }, 'мечтаешь о жизни следопыта со зверем'],
+      ['Ловкий вор с чувством юмора', { st: 0.8, whim: 0.6, melee: 0.3 }, 'симпатизируешь ловким ворам']
+    ]),
+    Q('q18', 0, 'Как ты учишься новому?', [
+      ['Беру одно умение и довожу до совершенства', { cx: -0.4, burst: 0.2 }, 'доводишь одно умение до совершенства'],
+      ['Хватаюсь за всё сразу: хочу уметь понемногу всё', { cx: 0.8, ut: 0.4 }, 'хочешь уметь понемногу всё'],
+      ['Сначала читаю всё, что есть, потом пробую', { cx: 0.6, mag: 0.4, myst: 0.3 }, 'сначала изучаешь, потом действуешь'],
+      ['Просто пробую, ошибаюсь и пробую снова', { cx: -0.2, bulk: 0.2, whim: 0.3, melee: 0.2 }, 'учишься на ходу']
+    ]),
+    Q('q19', 0, 'Какое время суток твоё?', [
+      ['Рассвет', { sh: -0.6, grim: -0.6 }, 'любишь рассвет'],
+      ['Ясный полдень', { grim: -0.4, whim: 0.3, wild: -0.3 }, 'любишь ясный день'],
+      ['Сумерки', { st: 0.6, myst: 0.5, wild: 0.3 }, 'любишь сумерки'],
+      ['Глубокая ночь', { sh: 0.7, grim: 0.8 }, 'любишь глубокую ночь']
+    ]),
+    Q('q20', 0, 'Ты споришь, а тебя не слышат. Что делаешь?', [
+      ['Говорю громче и твёрже', { tank: 0.4, bulk: 0.4, burst: 0.3 }, 'умеешь настоять на своём'],
+      ['Пытаюсь всех помирить', { heal: 0.6, ut: 0.5 }, 'стараешься всех помирить'],
+      ['Молчу, а потом делаю по-своему', { st: 0.5, solo: 0.6 }, 'тихо делаешь по-своему'],
+      ['Привожу такой довод, что спор заканчивается', { burst: 0.6, cx: 0.4, mag: 0.3 }, 'заканчиваешь спор одним доводом']
+    ]),
+    Q('q21', 0, 'Что ты возьмёшь в долгое путешествие?', [
+      ['Крепкие доспехи и надёжный щит', { tank: 1, bulk: 0.3, mag: -0.5 }, 'берёшь в дорогу щит и доспехи'],
+      ['Сумку с травами и бинтами', { heal: 0.8, nat: 0.6 }, 'берёшь в дорогу травы и бинты'],
+      ['Лук и запас стрел', { ranged: 0.8, nat: 0.4, mag: -0.6 }, 'берёшь в дорогу лук'],
+      ['Книгу заклинаний', { mag: 1, ranged: 0.4, myst: 0.6 }, 'берёшь в дорогу книгу заклинаний']
+    ]),
+    Q('q22', 0, 'Твоя комната обычно…', [
+      ['Идеальный порядок, всё на своих местах', { cx: -0.3, grim: -0.2, whim: -0.4 }, 'любишь порядок'],
+      ['Творческий хаос, полный интересных штук', { whim: 0.6, cx: 0.4, myst: -0.4 }, 'живёшь в творческом хаосе'],
+      ['Много растений и что-то живое', { nat: 0.8, wild: 0.6, pet: 0.4 }, 'окружаешь себя живым'],
+      ['Плотные шторы и свечи', { grim: 0.7, sh: 0.5, myst: 0.4 }, 'любишь полумрак и свечи']
+    ]),
+    Q('q23', 0, 'Что после победы приятнее всего?', [
+      ['Выдержать всё, что в меня летело', { tank: 1 }, 'гордишься, что всё выдержал'],
+      ['Знать, что все живы благодаря мне', { heal: 1 }, 'гордишься, что все живы'],
+      ['Нанести последний удар', { melee: 0.6, burst: 0.6 }, 'любишь нанести последний удар'],
+      ['Рассчитать всё издалека', { ranged: 0.8, cx: 0.3 }, 'любишь всё рассчитать издалека']
+    ]),
+    Q('q24', 0, 'Как ты относишься к древним тайнам и забытым знаниям?', [
+      ['Обожаю, могу копать годами', { myst: 1, mag: 0.4, cx: 0.3 }, 'обожаешь древние тайны'],
+      ['Интересно, но важнее то, что работает сейчас', { myst: -0.8, wild: -0.4 }, 'ценишь то, что работает сейчас'],
+      ['Немного жутко, но притягивает', { myst: 0.5, grim: 0.6, sh: 0.5 }, 'тянешься к жутковатому'],
+      ['Мне ближе мудрость предков и традиции', { wild: 0.6, myst: 0.4, nat: 0.4 }, 'чтишь мудрость предков']
+    ]),
+    Q('q25', 0, 'Каким ты видишь своего героя?', [
+      ['Огромным и могучим', { bulk: 1, tank: 0.2 }, 'видишь героя огромным и могучим'],
+      ['Крепким и коренастым', { bulk: 0.4, wild: -0.2, whim: 0.3 }, 'видишь героя крепким и коренастым'],
+      ['Высоким и изящным', { bulk: -0.4, myst: 0.6, grim: -0.2 }, 'видишь героя высоким и изящным'],
+      ['Маленьким и юрким', { bulk: -1, whim: 0.6, st: 0.3 }, 'видишь героя маленьким и юрким']
+    ]),
+    Q('q26', 0, 'Как ты обычно тратишь деньги?', [
+      ['Долго и терпеливо коплю на что-то большое', { burst: -0.6, cx: 0.2 }, 'терпеливо копишь'],
+      ['Сразу трачу на что-то яркое', { burst: 0.7, whim: 0.5 }, 'тратишь сразу и на яркое'],
+      ['Покупаю подарки друзьям', { heal: 0.5, ut: 0.6, solo: -0.4 }, 'любишь дарить'],
+      ['Вкладываю в инструменты и снаряжение', { tank: 0.3, myst: -0.6, cx: 0.3 }, 'вкладываешь в снаряжение']
+    ]),
+    Q('q27', 0, 'Какой юмор тебе ближе?', [
+      ['Чёрный', { grim: 0.8, sh: 0.4, whim: 0.4 }, 'любишь чёрный юмор'],
+      ['Абсурдный и безумный', { whim: 1, myst: -0.2 }, 'любишь абсурдный юмор'],
+      ['Тонкий и ироничный', { whim: 0.3, cx: 0.4, bulk: -0.2 }, 'любишь тонкую иронию'],
+      ['Шутки — не главное, мне ближе серьёзность', { whim: -1 }, 'предпочитаешь серьёзность']
+    ]),
+    Q('q28', 0, 'Нужно победить сильного противника. Твой план?', [
+      ['Бью первым и сильно, пока он не опомнился', { burst: 1, melee: 0.5 }, 'бьёшь первым и сильно'],
+      ['Ослабляю постепенно и не даю подойти', { burst: -0.8, ranged: 0.6, sh: 0.3 }, 'ослабляешь врага постепенно'],
+      ['Нападаю из засады, когда он не ждёт', { st: 1, burst: 0.5, melee: 0.3 }, 'нападаешь из засады'],
+      ['Сковываю его, а друзья добивают', { ut: 1, solo: -0.6 }, 'сковываешь врага для друзей']
+    ]),
+    Q('q29', 0, 'Как ты относишься к лидерству?', [
+      ['Люблю вести за собой и отвечать за всех', { tank: 0.8, ut: 0.3 }, 'любишь вести за собой'],
+      ['Лучше быть правой рукой, на которой всё держится', { heal: 0.5, ut: 0.6 }, 'предпочитаешь быть правой рукой'],
+      ['Мне не нужно лидерство, мне нужна свобода', { solo: 0.8, st: 0.3 }, 'ценишь свободу больше власти'],
+      ['Мне ближе командовать теми, кто не спорит', { pet: 0.8, sh: 0.4 }, 'любишь, когда тебе подчиняются без споров']
+    ]),
+    Q('q30', 0, 'За что ты бы сражался?', [
+      ['За свой дом и свой народ', { wild: 0.4, bulk: 0.4, tank: 0.2, myst: -0.2 }, 'сражаешься за дом и свой народ'],
+      ['За тех, кто слабее меня', { heal: 0.5, tank: 0.5, sh: -0.6 }, 'сражаешься за слабых'],
+      ['За себя: мир несправедлив, и я это знаю', { grim: 0.8, solo: 0.5, sh: 0.4 }, 'знаешь, что мир несправедлив'],
+      ['За знание: хочу понять, как устроен мир', { myst: 0.8, mag: 0.6, cx: 0.3 }, 'сражаешься за знание']
+    ])
+  ];
+
+  var LEVELS = [
+    { id: 'easy', name: 'Лёгкий', count: 10, note: 'Пара минут, быстрый ответ' },
+    { id: 'normal', name: 'Обычный', count: 30, note: 'Около семи минут, точнее результат' }
+  ];
+
+  function questionsFor(levelId) {
+    return levelId === 'easy' ? QUESTIONS.filter(function (q) { return q.easy; }) : QUESTIONS.slice();
+  }
+
+  // Player vector: summed weights minus the sum a random player would get on average
+  // (so only what sets the player apart counts), each axis divided by its max reachable
+  // absolute sum.
+  function playerVector(qs, answers) {
+    var raw = {}, max = {}, mean = {};
+    ALL_AXES.forEach(function (a) { raw[a] = 0; max[a] = 0; mean[a] = 0; });
+    qs.forEach(function (q, i) {
+      ALL_AXES.forEach(function (a) {
+        var m = 0, sum = 0;
+        q.answers.forEach(function (ans) { m = Math.max(m, Math.abs(ans.w[a] || 0)); sum += ans.w[a] || 0; });
+        max[a] += m;
+        mean[a] += sum / q.answers.length;
+      });
+      var ans = q.answers[answers[i]];
+      if (ans) ALL_AXES.forEach(function (a) { raw[a] += ans.w[a] || 0; });
+    });
+    var v = {}, touched = {};
+    ALL_AXES.forEach(function (a) {
+      touched[a] = max[a] > 0;
+      v[a] = max[a] > 0 ? (raw[a] - mean[a]) / max[a] : 0;
+    });
+    return { v: v, max: max, touched: touched };
+  }
+
+  function cosine(a, b, axes, touched) {
+    var dot = 0, na = 0, nb = 0;
+    axes.forEach(function (x) {
+      if (!touched[x]) return;
+      var p = a[x] || 0, q = b[x] || 0;
+      dot += p * q; na += p * p; nb += q * q;
+    });
+    if (na === 0 || nb === 0) return 0.5;
+    return (dot / Math.sqrt(na * nb) + 1) / 2;
+  }
+
+  function roleDist(v) {
+    var tot = 0, d = {};
+    ROLE_AXES.forEach(function (r) { d[r] = Math.max(0, v[r]); tot += d[r]; });
+    ROLE_AXES.forEach(function (r) { d[r] = tot > 0 ? d[r] / tot : 0.25; });
+    return d;
+  }
+
+  // The top role should matter more than a flat spread, otherwise hybrids
+  // (fit for every role) win every balanced player. Sharpen before the dot product.
+  var ROLE_SHARPEN = 4;
+  function sharpen(dist) {
+    var tot = 0, d = {};
+    ROLE_AXES.forEach(function (r) { d[r] = Math.pow(dist[r], ROLE_SHARPEN); tot += d[r]; });
+    ROLE_AXES.forEach(function (r) { d[r] = tot > 0 ? d[r] / tot : 0.25; });
+    return d;
+  }
+
+  function classScore(c, v, dist, touched) {
+    var fit = 0, sd = sharpen(dist);
+    ROLE_AXES.forEach(function (r) { fit += sd[r] * (c.cap[r] || 0); });
+    return 0.5 * fit + 0.5 * cosine(v, c.style, STYLE_AXES, touched);
+  }
+
+  function pct(x) { return Math.max(1, Math.min(99, Math.round(x * 100))); }
+
+  // Reasons: answers with the largest positive contribution to a target profile.
+  function reasons(qs, answers, pv, profileFn) {
+    var list = [];
+    qs.forEach(function (q, i) {
+      var ans = q.answers[answers[i]];
+      if (!ans) return;
+      var s = 0;
+      Object.keys(ans.w).forEach(function (a) {
+        if (pv.max[a] > 0) s += (ans.w[a] / pv.max[a]) * profileFn(a);
+      });
+      if (s > 0) list.push({ s: s, r: ans.reason });
+    });
+    list.sort(function (x, y) { return y.s - x.s; });
+    var out = [];
+    list.forEach(function (x) { if (out.length < 3 && out.indexOf(x.r) < 0) out.push(x.r); });
+    return out;
+  }
+
+  function validRaces(classId, faction, skyborne) {
+    return RACES.filter(function (r) {
+      return r.faction === faction && (skyborne || !r.skyborne) && r.classes.indexOf(classId) >= 0;
+    });
+  }
+
+  function compute(levelId, answers, opts) {
+    opts = opts || {};
+    var faction = opts.faction === 'horde' ? 'horde' : 'alliance';
+    var skyborne = opts.skyborne !== false;
+    var qs = questionsFor(levelId);
+    var pv = playerVector(qs, answers);
+    var v = pv.v, dist = roleDist(v);
+
+    var roleOrder = ROLE_AXES.slice().sort(function (a, b) { return v[b] - v[a]; });
+    // Display share: shift so the weakest role is near zero, not clipped, so 2nd and 3rd show.
+    var low = Math.min.apply(null, ROLE_AXES.map(function (r) { return v[r]; })), shown = {}, tot = 0;
+    ROLE_AXES.forEach(function (r) { shown[r] = v[r] - low + 0.05; tot += shown[r]; });
+    var roles = roleOrder.slice(0, 3).map(function (r) {
+      return { id: r, name: ROLES[r].name, pct: Math.round(shown[r] * 100 / tot), blurb: ROLES[r].blurb };
+    });
+
+    var scored = CLASSES.map(function (c) { return { c: c, s: classScore(c, v, dist, pv.touched) }; })
+      .sort(function (a, b) { return b.s - a.s; });
+    var classes = scored.slice(0, 3).map(function (x) {
+      var role = roleOrder.filter(function (r) { return x.c.cap[r]; })[0];
+      return { id: x.c.id, name: x.c.name, spec: specFor(x.c.id, role, v), role: role,
+        pct: pct(x.s), color: x.c.color, blurb: x.c.blurb };
+    });
+
+    var selected = classes[0].id;
+    if (opts.classId && classes.some(function (c) { return c.id === opts.classId; })) selected = opts.classId;
+    var selClass = CLASSES.filter(function (c) { return c.id === selected; })[0];
+
+    var races = validRaces(selected, faction, skyborne)
+      .map(function (r) { return { r: r, s: cosine(v, r.p, RACE_AXES, pv.touched) }; })
+      .sort(function (a, b) { return b.s - a.s; })
+      .slice(0, 3)
+      .map(function (x) { return { id: x.r.id, name: x.r.name, pct: pct(x.s), blurb: x.r.blurb }; });
+
+    var topRole = roleOrder[0];
+    var topRace = races.length ? RACES.filter(function (r) { return r.id === races[0].id; })[0] : null;
+    var why = {
+      role: reasons(qs, answers, pv, function (a) { return a === topRole ? 1 : 0; }),
+      'class': reasons(qs, answers, pv, function (a) {
+        if (STYLE_AXES.indexOf(a) >= 0) return selClass.style[a] || 0;
+        if (ROLE_AXES.indexOf(a) >= 0) return (selClass.cap[a] || 0) * dist[a];
+        return 0;
+      }),
+      race: topRace ? reasons(qs, answers, pv, function (a) { return topRace.p[a] || 0; }) : []
+    };
+
+    return { roles: roles, classes: classes, selectedClassId: selected, races: races, why: why,
+      faction: faction, skyborne: skyborne };
+  }
+
+  // Share link: "<e|n><answer digits>.<a|h><1|0>.<class id or ->"
+  function encode(st) {
+    var lv = st.level === 'easy' ? 'e' : 'n';
+    return lv + st.answers.join('') + '.' + (st.faction === 'horde' ? 'h' : 'a') + (st.skyborne === false ? '0' : '1') +
+      '.' + (st.classId || '-');
+  }
+
+  function decode(s) {
+    try {
+      var parts = decodeURIComponent(String(s || '')).split('.');
+      if (parts.length !== 3) return null;
+      var level = parts[0][0] === 'e' ? 'easy' : parts[0][0] === 'n' ? 'normal' : null;
+      if (!level) return null;
+      var qs = questionsFor(level);
+      var digits = parts[0].slice(1);
+      if (digits.length !== qs.length) return null;
+      var answers = [];
+      for (var i = 0; i < digits.length; i++) {
+        var n = Number(digits[i]);
+        if (!(n >= 0 && n < qs[i].answers.length)) return null;
+        answers.push(n);
+      }
+      if (!/^[ah][01]$/.test(parts[1])) return null;
+      var classId = parts[2] === '-' ? null : parts[2];
+      if (classId && !CLASSES.some(function (c) { return c.id === classId; })) classId = null;
+      return { level: level, answers: answers, faction: parts[1][0] === 'h' ? 'horde' : 'alliance',
+        skyborne: parts[1][1] === '1', classId: classId };
+    } catch (e) { return null; }
+  }
+
+  // Console check: QuizEngine.selfCheck(10000)
+  function selfCheck(n) {
+    n = n || 10000;
+    var report = {}, errors = [];
+    LEVELS.forEach(function (lv) {
+      var qs = questionsFor(lv.id), cls = {}, race = {}, role = {};
+      for (var k = 0; k < n; k++) {
+        var ans = qs.map(function (q) { return Math.floor(Math.random() * q.answers.length); });
+        var fac = k % 2 ? 'horde' : 'alliance';
+        var r = compute(lv.id, ans, { faction: fac, skyborne: true });
+        cls[r.classes[0].id] = (cls[r.classes[0].id] || 0) + 1;
+        role[r.roles[0].id] = (role[r.roles[0].id] || 0) + 1;
+        if (r.races[0]) race[r.races[0].id] = (race[r.races[0].id] || 0) + 1;
+      }
+      var toPct = function (o) { var x = {}; Object.keys(o).forEach(function (k) { x[k] = +(o[k] * 100 / n).toFixed(1); }); return x; };
+      report[lv.id] = { role: toPct(role), cls: toPct(cls), race: toPct(race) };
+    });
+    // Rule check: every class x faction x toggle returns only valid races.
+    CLASSES.forEach(function (c) {
+      ['alliance', 'horde'].forEach(function (f) {
+        [true, false].forEach(function (sb) {
+          validRaces(c.id, f, sb).forEach(function (r) {
+            if (r.faction !== f || (!sb && r.skyborne) || r.classes.indexOf(c.id) < 0) errors.push(c.id + '/' + f + '/' + r.id);
+          });
+          if (validRaces(c.id, f, sb).length === 0) errors.push('no race for ' + c.id + '/' + f + '/sky=' + sb);
+        });
+      });
+    });
+    report.errors = errors;
+    return report;
+  }
+
+  window.QuizEngine = {
+    LEVELS: LEVELS,
+    getQuestions: function (levelId) {
+      return questionsFor(levelId).map(function (q) {
+        return { id: q.id, text: q.text, answers: q.answers.map(function (a) { return { text: a.text }; }) };
+      });
+    },
+    compute: compute,
+    encode: encode,
+    decode: decode,
+    selfCheck: selfCheck,
+    _data: { CLASSES: CLASSES, RACES: RACES, QUESTIONS: QUESTIONS }
+  };
+})();
+</script>
+
+<script id="ui">
+(function () {
+  'use strict';
+  var E = window.QuizEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var st = { level: null, questions: [], answers: [], idx: 0, faction: 'alliance', skyborne: true, classId: undefined };
+  var busy = false;
+
+  var FACTION_ACC = { alliance: 'за Альянс', horde: 'за Орду' };
+  var FACTION_OTHER = { alliance: 'horde', horde: 'alliance' };
+  var FACTION_NAME = { alliance: 'Альянс', horde: 'Орду' };
+  var UPCOMING = [{ name: 'Глубокий', count: 60 }, { name: 'Экстра', count: 100 }];
+
+  // Role sigils, drawn with pathLength=1 so the stroke can be animated.
+  var SIGILS = {
+    tank: '<path class="draw" pathLength="1" d="M46 18 70 27v17c0 14-10 24-24 30-14-6-24-16-24-30V27z"/><path class="draw" pathLength="1" d="M46 30v32M36 42h20"/>',
+    heal: '<path class="draw" pathLength="1" d="M46 72V44"/><path class="draw" pathLength="1" d="M46 46c-12 0-20-8-20-22 14 0 20 8 20 22z"/><path class="draw" pathLength="1" d="M46 54c10 0 18-7 18-19-12 0-18 7-18 19z"/><path class="draw" pathLength="1" d="M34 72h24"/>',
+    melee: '<path class="draw" pathLength="1" d="M26 22 62 62M66 22 30 62"/><path class="draw" pathLength="1" d="M56 66l10-10M36 66 26 56M24 70l6-6M68 70l-6-6"/>',
+    ranged: '<path class="draw" pathLength="1" d="M30 18c22 8 22 48 0 56"/><path class="draw" pathLength="1" d="M30 18v56"/><path class="draw" pathLength="1" d="M24 46h46M62 40l8 6-8 6"/>'
+  };
+  var GEM = '<svg class="gem" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1 13 7 7 13 1 7z"/></svg>';
+  var CLS_MARK = '<svg class="cls-mark" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"/><path d="M18 7l2.6 8.4L29 18l-8.4 2.6L18 29l-2.6-8.4L7 18l8.4-2.6z"/></svg>';
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  // Lift dark class colors (e.g. shaman blue) until they read on the night sky.
+  function readable(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return '#B6B4D6';
+    var n = parseInt(m[1], 16), c = [n >> 16 & 255, n >> 8 & 255, n & 255];
+    function lum(c) { return c.map(function (v) { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }).reduce(function (s, v, i) { return s + v * [.2126, .7152, .0722][i]; }, 0); }
+    for (var k = 0; k < 10 && lum(c) < .3; k++) c = c.map(function (v) { return Math.round(v + (255 - v) * .18); });
+    return '#' + c.map(function (v) { return v.toString(16).padStart(2, '0'); }).join('');
+  }
+
+  // Reasons that carry their own commas are joined with semicolons so the sentence stays readable.
+  function joinRu(list) {
+    if (list.length < 2) return list.join('');
+    var inner = list.some(function (x) { return x.indexOf(',') >= 0; });
+    return list.slice(0, -1).join(inner ? '; ' : ', ') + (inner ? '; ' : ' и ') + list[list.length - 1];
+  }
+
+  /* ---------- sky ---------- */
+  (function stars() {
+    var svg = $('stars'), out = '', seed = 11;
+    function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    for (var i = 0; i < 70; i++) {
+      var x = rnd() * 400, y = rnd() * 300, r = rnd() < .12 ? 1.1 : .5 + rnd() * .45;
+      var o = (.25 + rnd() * .6) * (1 - y / 380);
+      var tw = !reduce && rnd() < .2 ? ' class="twinkle" style="animation-delay:' + (rnd() * 4).toFixed(1) + 's"' : '';
+      out += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r.toFixed(2) + '" fill="#EEEAF6" opacity="' + o.toFixed(2) + '"' + tw + '/>';
+    }
+    svg.innerHTML = out;
+  })();
+
+  /* ---------- screens ---------- */
+  function show(name, focusEl) {
+    ['start', 'question', 'result'].forEach(function (s) { $('s-' + s).hidden = s !== name; });
+    document.body.dataset.screen = name;
+    window.scrollTo(0, 0);
+    if (focusEl) focusEl.focus({ preventScroll: true });
+  }
+
+  function setHash(code) {
+    var url = location.href.split('#')[0] + (code ? '#r=' + code : '');
+    try { history.replaceState(null, '', url); } catch (e) { if (code) location.hash = 'r=' + code; }
+  }
+
+  /* ---------- start ---------- */
+  function renderStart() {
+    var html = '';
+    E.LEVELS.forEach(function (lv) {
+      html += '<li><button type="button" class="level" data-level="' + esc(lv.id) + '">' +
+        '<span class="level-name">' + esc(lv.name) + '</span>' +
+        '<span class="level-count">' + lv.count + ' ' + plural(lv.count) + '</span>' +
+        (lv.note ? '<span class="level-note">' + esc(lv.note) + '</span>' : '') + '</button></li>';
+    });
+    UPCOMING.forEach(function (lv) {
+      if (E.LEVELS.some(function (l) { return l.count === lv.count; })) return;
+      html += '<li><button type="button" class="level" disabled>' +
+        '<span class="level-name">' + lv.name + '<span class="soon">скоро</span></span>' +
+        '<span class="level-count">' + lv.count + ' ' + plural(lv.count) + '</span></button></li>';
+    });
+    $('levels').innerHTML = html;
+  }
+  function plural(n) {
+    var a = n % 10, b = n % 100;
+    if (a === 1 && b !== 11) return 'вопрос';
+    if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return 'вопроса';
+    return 'вопросов';
+  }
+  $('levels').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-level]'); if (!b) return;
+    startQuiz(b.dataset.level);
+  });
+
+  function startQuiz(levelId) {
+    st.level = levelId;
+    st.questions = E.getQuestions(levelId);
+    st.answers = [];
+    st.idx = 0;
+    st.classId = undefined;
+    renderTrail();
+    renderQuestion(false);
+    show('question', $('qtext'));
+  }
+
+  /* ---------- question ---------- */
+  function renderTrail() {
+    var html = '';
+    for (var i = 0; i < st.questions.length; i++) html += '<i></i>';
+    $('trail').innerHTML = html;
+  }
+  function renderQuestion(animate, reverse) {
+    var q = st.questions[st.idx], total = st.questions.length, chosen = st.answers[st.idx];
+    $('count').textContent = 'Вопрос ' + (st.idx + 1) + ' из ' + total;
+    Array.prototype.forEach.call($('trail').children, function (el, i) {
+      el.className = i < st.idx ? 'done' : i === st.idx ? 'now' : '';
+    });
+    $('qtext').textContent = q.text;
+    $('answers').innerHTML = q.answers.map(function (a, i) {
+      return '<li><button type="button" class="answer" data-i="' + i + '" aria-pressed="' + (chosen === i) + '">' + GEM + '<span>' + esc(a.text) + '</span></button></li>';
+    }).join('');
+    var card = $('qcard');
+    card.classList.remove('leaving', 'entering', 'rev');
+    if (animate && !reduce) { void card.offsetWidth; card.classList.add('entering'); if (reverse) card.classList.add('rev'); }
+  }
+  function goTo(idx, reverse) {
+    var card = $('qcard');
+    busy = true;
+    if (!reduce) card.classList.add('leaving');
+    setTimeout(function () {
+      st.idx = idx;
+      renderQuestion(true, reverse);
+      $('qtext').focus({ preventScroll: true });
+      busy = false;
+    }, reduce ? 60 : 170);
+  }
+  $('answers').addEventListener('click', function (e) {
+    var b = e.target.closest('.answer'); if (!b || busy) return;
+    var i = +b.dataset.i;
+    st.answers[st.idx] = i;
+    Array.prototype.forEach.call($('answers').querySelectorAll('.answer'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    busy = true;
+    setTimeout(function () {
+      busy = false;
+      if (st.idx + 1 < st.questions.length) goTo(st.idx + 1, false);
+      else finish();
+    }, reduce ? 120 : 260);
+  });
+  $('back').addEventListener('click', function () {
+    if (busy) return;
+    if (st.idx === 0) { show('start', document.querySelector('.title')); return; }
+    goTo(st.idx - 1, true);
+  });
+
+  function finish() {
+    st.answers = st.answers.slice(0, st.questions.length);
+    st.faction = 'alliance';
+    st.skyborne = true;
+    st.classId = undefined;
+    showResult();
+  }
+
+  /* ---------- result ---------- */
+  var res = null;
+
+  function compute() {
+    res = E.compute(st.level, st.answers, { faction: st.faction, skyborne: st.skyborne, classId: st.classId });
+    st.classId = res.selectedClassId;
+    st.faction = res.faction || st.faction;
+    st.skyborne = res.skyborne !== undefined ? res.skyborne : st.skyborne;
+  }
+  function code() {
+    return E.encode({ level: st.level, answers: st.answers, faction: st.faction, skyborne: st.skyborne, classId: st.classId });
+  }
+
+  function showResult() {
+    compute();
+    var top = res.roles[0];
+    $('sigil').innerHTML = '<svg viewBox="0 0 92 92"><circle class="ring" cx="46" cy="46" r="44"/>' + (SIGILS[top.id] || SIGILS.tank) + '</svg>';
+    $('role-name').textContent = top.name;
+    $('role-blurb').textContent = top.blurb || '';
+    $('roles').innerHTML = res.roles.map(function (r) {
+      return '<li class="meter"><span class="meter-name">' + esc(r.name) + '</span><span class="meter-pct">' + r.pct + '%</span>' +
+        '<span class="meter-bar"><span style="width:' + Math.max(0, Math.min(100, r.pct)) + '%"></span></span></li>';
+    }).join('');
+    $('manual').hidden = true;
+    $('status').textContent = '';
+    renderClasses();
+    renderRaces(false);
+    renderWhy();
+    setHash(code());
+    show('result', $('verdict-h'));
+  }
+
+  function renderClasses() {
+    $('classes').innerHTML = res.classes.map(function (c) {
+      var sel = c.id === res.selectedClassId;
+      return '<li><button type="button" class="cls" data-c="' + esc(c.id) + '" aria-pressed="' + sel + '" style="--c:' + readable(c.color) + '">' +
+        CLS_MARK +
+        '<span><span class="cls-name">' + esc(c.name) + '</span><span class="cls-spec">' + esc(c.spec) + '</span></span>' +
+        '<span class="cls-pct">' + c.pct + '%</span>' +
+        '<span class="cls-blurb">' + esc(c.blurb || '') + '</span></button></li>';
+    }).join('');
+  }
+
+  function renderRaces(animate) {
+    var fc = st.faction === 'horde' ? 'var(--horde)' : 'var(--alliance)';
+    document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.f === st.faction)); });
+    $('sky').setAttribute('aria-checked', String(st.skyborne));
+    var cls = res.classes.filter(function (c) { return c.id === res.selectedClassId; })[0];
+    var html;
+    if (!res.races.length) {
+      var other = FACTION_OTHER[st.faction];
+      html = '<div class="race-none"><p>' + esc(cls ? cls.name : 'Этот класс') + ' не встречается ' + FACTION_ACC[st.faction] +
+        (st.skyborne ? '' : ' без Небеснорожденных') + '.</p>' +
+        '<button type="button" class="ghost" data-switch="' + other + '">Посмотреть ' + FACTION_ACC[other] + '</button></div>';
+    } else {
+      html = '<ul class="races' + (animate && !reduce ? ' swap' : '') + '">' + res.races.map(function (r) {
+        return '<li class="race" style="--fc:' + fc + '"><div class="race-top"><h3 class="race-name">' + esc(r.name) + '</h3>' +
+          '<span class="race-pct">' + r.pct + '%</span></div>' +
+          (r.blurb ? '<p class="race-blurb">' + esc(r.blurb) + '</p>' : '') + '</li>';
+      }).join('') + '</ul>';
+      if (res.races.length === 1) html += '<p class="race-only">Этим классом ' + FACTION_ACC[st.faction] + ' может играть только эта раса.</p>';
+    }
+    $('races-wrap').innerHTML = html;
+  }
+
+  function renderWhy() {
+    var groups = [];
+    var role = res.roles[0], cls = res.classes.filter(function (c) { return c.id === res.selectedClassId; })[0], race = res.races[0];
+    var w = res.why || {};
+    if (w.role && w.role.length) groups.push(['Почему ' + role.name, w.role]);
+    if (cls && w.class && w.class.length) groups.push(['Почему ' + cls.name, w.class]);
+    if (race && w.race && w.race.length) groups.push(['Почему ' + race.name, w.race]);
+    $('why-panel').hidden = !groups.length;
+    $('why').innerHTML = groups.map(function (g) {
+      return '<div><h3>' + esc(g[0]) + '</h3><p>Ты ' + esc(joinRu(g[1])) + '.</p></div>';
+    }).join('');
+  }
+
+  function recompute() {
+    compute();
+    renderClasses();
+    renderRaces(true);
+    renderWhy();
+    setHash(code());
+    $('status').textContent = '';
+  }
+
+  $('classes').addEventListener('click', function (e) {
+    var b = e.target.closest('.cls'); if (!b || b.dataset.c === st.classId) return;
+    st.classId = b.dataset.c;
+    recompute();
+    var again = $('classes').querySelector('[data-c="' + b.dataset.c + '"]'); if (again) again.focus();
+  });
+  document.querySelector('.seg').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-f]'); if (!b || b.dataset.f === st.faction) return;
+    st.faction = b.dataset.f;
+    recompute();
+  });
+  $('races-wrap').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-switch]'); if (!b) return;
+    st.faction = b.dataset.switch;
+    recompute();
+    var seg = document.querySelector('.seg button[data-f="' + st.faction + '"]'); if (seg) seg.focus();
+  });
+  $('sky').addEventListener('click', function () {
+    st.skyborne = !st.skyborne;
+    recompute();
+  });
+
+  $('share').addEventListener('click', function () {
+    var link = location.href.split('#')[0] + '#r=' + code();
+    function manual() {
+      $('manual').hidden = false;
+      var inp = $('manual-link');
+      inp.value = link; inp.focus(); inp.select();
+      $('status').textContent = 'Не получилось скопировать автоматически.';
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(link).then(function () {
+        $('manual').hidden = true;
+        $('status').textContent = 'Ссылка скопирована';
+      }, manual);
+    } else {
+      var ok = false, ta = document.createElement('textarea');
+      ta.value = link; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      document.body.removeChild(ta);
+      if (ok) $('status').textContent = 'Ссылка скопирована'; else manual();
+    }
+  });
+
+  $('again').addEventListener('click', function () {
+    setHash('');
+    st.answers = []; st.classId = undefined; st.faction = 'alliance'; st.skyborne = true;
+    show('start', document.querySelector('.title'));
+  });
+
+  /* ---------- boot ---------- */
+  function boot() {
+    renderStart();
+    var h = location.hash;
+    if (h.indexOf('#r=') === 0) {
+      var s = null;
+      try { s = E.decode(h.slice(3)); } catch (e) { s = null; }
+      if (s) {
+        try {
+          st.level = s.level; st.questions = E.getQuestions(s.level); st.answers = s.answers.slice();
+          st.faction = s.faction === 'horde' ? 'horde' : 'alliance';
+          st.skyborne = s.skyborne !== false; st.classId = s.classId;
+          showResult();
+          return;
+        } catch (e) { /* fall through to start */ }
+      }
+      setHash('');
+    }
+    show('start');
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
