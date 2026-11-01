@@ -54,8 +54,9 @@ high-quality questions.
    - Role: top 3 with match percent; the first one is the headline.
    - Class: top 3 with match percent and the spec that fits the top role (e.g. «Паладин — Защита»).
    - Faction switch «Альянс / Орда» (default: Альянс; no faction question in the quiz).
-   - Race: top 3 for the chosen faction, **only races that can play the top-1 class in that
-     faction**. When fewer than 3 are valid, show only those (Horde Paladin → only Нежить).
+   - Race: top 3 for the chosen faction, **only races that can play the selected class in that
+     faction**. The selected class is the top-1 class; tapping another class in the top 3 selects
+     it instead. When fewer than 3 are valid, show only those (Horde Paladin → only Нежить).
      Switching faction recalculates races at once, without retaking the quiz.
    - Skyborne toggle «Учитывать Небеснорожденных» (default: on). Off removes both Skyborne variants
      from race matching. Note next to it: the race needs a paid edition.
@@ -93,12 +94,14 @@ change here.
 - Player vector: sum of the chosen answers' weights, divided per axis by the maximum reachable
   absolute sum on that axis for the chosen depth. Axes no question touched are left out of every
   comparison.
+- Role weights are never negative: an answer adds to the roles it points at and leaves the rest.
 - Role: the four role axes, ranked; percent = share of the role's value in the total of positive
   role values.
 - Class: `score = 0.5 × roleFit + 0.5 × playstyleSimilarity`. `roleFit` is the player's role
   distribution dotted with the class's role capability (1 for a full spec, 0.5 for a partial one:
   Shaman tank, Hunter melee). `playstyleSimilarity` is cosine similarity on playstyle axes, mapped
-  to 0…1. The weights 0.5/0.5 are a starting point; tune them with the reachability check below.
+  to 0…1; a zero vector counts as 0.5. The weights 0.5/0.5 are a starting point;
+  tune them with the reachability check below.
 - Spec shown: the class's spec for the player's top role; if the class has none, its spec for the
   player's best role it does have.
 - Race: cosine similarity on race axes among the valid races, mapped to 0…1. A race profile may
@@ -157,7 +160,7 @@ radius 12px"). A new request that reverses a value names the old value in one li
 2. Easy asks 10 questions, Normal 30; "назад" changes an answer and the result follows it.
 3. Every class can come out as top-1, and every race variant as top-1 race for at least one class
    and faction (reachability check, below).
-4. No result ever shows a race that cannot play the top class in the chosen faction, with the
+4. No result ever shows a race that cannot play the selected class in the chosen faction, with the
    Skyborne toggle on or off.
 5. The faction switch and the Skyborne toggle recalculate races at once.
 6. A share link opens the same result in a fresh browser.
