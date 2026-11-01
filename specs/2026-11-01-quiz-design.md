@@ -137,7 +137,18 @@ asks for one complete HTML mock of start, question and result screens.
 
 ### Accepted visual decisions
 
-None yet. After each review round, list the accepted values here (e.g. "background #…; answer card
+Round 1 (2026-11-01, Opus 5.5 with the frontend-design skill; Fable was unavailable), waiting for
+Roman's review:
+
+- Concept: dusk sky over the game world; the quiz reads like reading the stars.
+- Palette: night `#131936`, dusk `#2A2960`, horizon `#5E4A86`, text `#EEEAF6`, muted `#B6B4D6`,
+  star accent `#F3DDA0` (progress, chosen answer, headline role, primary button), Alliance
+  `#6E9BF2`, Horde `#EC6A5F`.
+- Fonts: Forum (display), Alegreya Sans (text), both with Cyrillic.
+- Radii: panels 22px, buttons 14px, switches and badges 999px. Spacing step 4px; column up to 36rem.
+- Signature: SVG mountains with a floating island and spire; progress as a chain of stars.
+
+After each review round, list the accepted values here (e.g. "background #…; answer card
 radius 12px"). A new request that reverses a value names the old value in one line.
 
 ## Exclusions (v1)
