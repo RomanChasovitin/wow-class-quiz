@@ -91,15 +91,19 @@ change here.
 
 ### Scoring
 
-- Player vector: sum of the chosen answers' weights, divided per axis by the maximum reachable
-  absolute sum on that axis for the chosen depth. Axes no question touched are left out of every
+- Player vector: sum of the chosen answers' weights minus the sum a random player gets on average
+  (the mean answer of each question), divided per axis by the maximum reachable absolute sum on
+  that axis for the chosen depth. Without the centering, the average player looked like a Druid
+  (86% of random runs on Normal), because answers carry more positive weight on complexity,
+  utility and nature. Axes no question touched are left out of every
   comparison.
 - Role weights are never negative: an answer adds to the roles it points at and leaves the rest.
-- Role: the four role axes, ranked; percent = share of the role's value in the total of positive
-  role values.
+- Role: the four role axes, ranked; the displayed percent is each role's share after shifting all
+  four so the weakest is near zero (so the 2nd and 3rd roles do not show as 0%).
 - Class: `score = 0.5 × roleFit + 0.5 × playstyleSimilarity`. `roleFit` is the player's role
-  distribution dotted with the class's role capability (1 for a full spec, 0.5 for a partial one:
-  Shaman tank, Hunter melee). `playstyleSimilarity` is cosine similarity on playstyle axes, mapped
+  distribution, raised to the 4th power and renormalized so the top role dominates, dotted with the class's role capability (1 for a full spec, 0.5 for a partial one:
+  Shaman tank, Hunter melee; hybrids get slightly less than 1 per role: Paladin 0.9, Shaman 0.9,
+  Druid 0.85, Priest ranged 0.9, so a pure class wins its own role on a tie). `playstyleSimilarity` is cosine similarity on playstyle axes, mapped
   to 0…1; a zero vector counts as 0.5. The weights 0.5/0.5 are a starting point;
   tune them with the reachability check below.
 - Spec shown: the class's spec for the player's top role; if the class has none, its spec for the
